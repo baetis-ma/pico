@@ -1,0 +1,20 @@
+#!/usr/bin/gnuplot
+set term png size 400, 600
+set output "spectro.png"
+#set term x11
+set title "Spectrogram"
+unset key
+set tic scale 0
+set xrange[0:128]
+set yrange[0:500]
+#set zrange[0:260]
+
+#set dgrid3d
+#set pm3d interpolate 4,4
+set view map
+#set palette defined (0 "white", .5 "black" )
+#set palette defined ( 0 0 0 0, 1 1 1 1)
+#while(1) {
+plot "data3" matrix with image
+#replot
+#}

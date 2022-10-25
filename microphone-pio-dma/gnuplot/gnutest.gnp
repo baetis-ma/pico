@@ -1,0 +1,24 @@
+#!/usr/bin/gnuplot 
+set term png size 800, 400 background rgb "black"
+#set term png size 600, 400 background rgb "gray20"
+set output "spectro.png"
+set title "Microphone Spectrogram" font ",20" tc rgb "salmon"
+unset key
+set xtic font ",7" tc rgb "white"
+set autoscale fix
+set ytic font ",7" tc rgb "white"
+#set tic scale 0
+#set yrange[0:5]
+#set xrange[0:-50]
+set cbrange [0:20]
+set xlabel "Time sec" font ",18" tc rgb "salmon"
+set ylabel "Frequency KHz" font ",18" tc rgb "salmon"
+unset colorbox
+#set palette rgb 7,5,32;
+set view map
+
+samp = 256         #half the number of samples taken per fft calculation
+sampfreq = 20      #sample freq in khz
+imagelen = 500     #max length of image
+imagerate = 10     #number fft samples taken per second
+splot "data3" u ((imagelen-1*$2)/imagerate):($1*sampfreq/(4*samp)):3 matrix with image  

@@ -1,0 +1,3 @@
+stty -F /dev/ttyACM0 115200 raw; cat /dev/ttyACM0  | ./read.pl
+
+spectro.png is output file (view with updating viewer - such as linux Image Viewer)

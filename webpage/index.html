@@ -1,0 +1,42 @@
+R"=====(
+HTTP/1.1 200 OK
+Access_Control_Allow_origin: *
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+    body {background-color: darkgoldenrod;}
+    h1  { text-align:center; color:Black; }
+    #led { position:absolute;top:13%;left:35%; }
+    #text { position:absolute;top:15%;left:30%;color:gray;}
+    input { font-size:large;}
+</style>
+</head>
+
+<body>
+    <h1>simple webpage</h1>
+    <input id="led" type="button" size="5" value="Toggle LED">
+    <h1><p id='text'>led state undefined</p><h1>
+
+    <script>
+      document.getElementById('led').onclick = function() { 
+         if(runload == 1) {runload = 0; } else { runload = 1; }
+         var tempstr ="runload="+runload;
+         if(runload == 0) {document.getElementById('text').innerHTML = "LED OFF"; }
+            else  {document.getElementById('text').innerHTML = "LED ON"; }
+         var xhr = new XMLHttpRequest();
+         xhr.open("GET", "getData?"+tempstr, true);
+         xhr.setRequestHeader("Content-Type", "application/bin");
+         xhr.send(tempstr);
+         xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+               console.log(this.responseText);
+             }
+         }
+      }
+      var runload = 1;
+    </script>
+</body>
+</html>
+)====="

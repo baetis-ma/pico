@@ -1,0 +1,26 @@
+#!/usr/bin/gnuplot 
+set term wxt noraise
+set yrange[0:4.2]
+set xrange[0: ]
+
+set title "Battery Discharge"
+set xlabel "Time Hours"
+set ylabel "Battery Voltage"
+unset key
+
+do for [ii=1:1000] {
+   ah = system("head -n1 discharge.txt|tr -s ' '|cut -d ' ' -f 5"); 
+   wh = system("head -n1 discharge.txt|tr -d '\n'|tr -s ' '|tr -d '\n'|cut -d ' ' -f 6"); 
+   curr = system("tail -2 discharge.txt|head -1|tr -s ' '|cut -d ' ' -f 4"); 
+   set label 4 at graph .4,.2  sprintf("current = %s A", curr)
+   set label 1 at graph .08,.2  sprintf("Integral so far")
+   set label 2 at graph .1,.15 sprintf(" AMP-hours  %s", ah)
+   set label 3 at graph .1,.1  sprintf(" Watt-hours %s", wh)
+   len = system("wc discharge.txt | cut -d ' ' -f 3")
+   
+   #non zero length - two solutions?
+   if((len eq "0") ==0) {
+       plot -1, 'discharge.txt' u ($1/3600):2 w l lw 2
+   }
+   pause 10;
+}

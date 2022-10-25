@@ -1,0 +1,16 @@
+#!/usr/bin/gnuplot -p
+
+set yrange[0: ]
+set xrange[0: ]
+
+set xlabel "Time Seconds"
+set ylabel "battery voltage"
+
+f(x) = m*x + b
+set fit quiet
+fit f(x) 'rload.txt' using 2:1 via m, b 
+
+set label 1 at 0.1, 2.5 sprintf(" Series Resistance = %.2f", m)
+set label 2 at 0.1, 2.1 sprintf(" No Load Voltage   = %.2f", b)
+
+plot 'rload.txt' u 2:1 , f(x) title 'Model fit'
