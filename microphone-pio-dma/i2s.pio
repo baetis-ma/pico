@@ -6,23 +6,26 @@
 
 .program i2s
 .side_set 1
-loop:
-    set x, 31          side 0x0
-    set pins, 0        side 0x1
     nop                side 0x1
+loop:
+    set x, 30          side 0x1
+    set pins, 0        side 0x0
+    in pins, 1         side 0x0
 wc0:
-    nop          [1]   side 0x0
-    in pins, 1         side 0x1
-    jmp x-- wc0        side 0x1
+    nop  [1]           side 0x1
+    in pins, 1         side 0x0
+    jmp x-- wc0        side 0x0
 
+    nop                side 0x1
+    set x, 30          side 0x1
     set pins, 1        side 0x0
-    set x, 31          side 0x0
-    nop          [1]   side 0x1
+    in pins, 1         side 0x0
 wc1:
-    nop          [1]   side 0x0
-    in pins, 1         side 0x1
-    jmp x-- wc1        side 0x1
-    jmp loop           side 0x0
+    nop  [1]           side 0x1
+    in pins, 1         side 0x0
+    jmp x-- wc1        side 0x0
+
+    jmp loop           side 0x1
 
 % c-sdk {
 static inline void i2s_program_init(PIO pio, uint sm, uint offset, 

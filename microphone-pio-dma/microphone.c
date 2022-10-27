@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/dma.h"
 #include "hardware/irq.h"
@@ -25,7 +26,7 @@
 
 #define NUMSAMP 512
 #define SAMPLE_RATE 0.100
-#define SAMPLE_FREQ 22050
+#define SAMPLE_FREQ 20000
 #define PIO_SERIAL_CLKDIV  125000000/(4*32*SAMPLE_FREQ)
 
 float output[NUMSAMP];
@@ -51,6 +52,7 @@ void dma_int_handler() {
 int main() {
     stdio_init_all();
     float next_time = 0.00;
+    
     //setup pio output serialiser
     int i2s_ck = 2;
     int i2s_da = 3;
@@ -92,8 +94,11 @@ int main() {
 	   //printf("%6.2f  ", next_time);
            //for(int i=0; i<4; i++){printf("0x%08x ",i2s_data[i]);} 
            for(int i=0; i<NUMSAMP; i++){
-               input[i] = -1.0*((float)(int)i2s_data[1+2*i])/(1<<26);
-               //printf("%7.4f ", input[i]);
+               i2s_data[1+2*i] = (i2s_data[1+2*i] << 2); 
+               input[i] = ((float)(int)i2s_data[1+2*i])/(1<<26);
+	       //hamming window
+	       float hammingwindow = 0.5435 + (1-0.5435) * (float)sin((2*3.14159*i)/NUMSAMP);
+	       input[i] = hammingwindow * input[i];
 	   } //printf("\n");
 	   
            //start = get_absolute_time();
